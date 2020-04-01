@@ -41,6 +41,7 @@ player = Player(300, 200, 0, "img/smalllinks.gif", name, 32, 8)
 player.draw()
 
 # connect to api
+"""
 api = api('http://localhost:3000', name)
 api.sendData(17, 300, 200)
 enemyData = api.getData()
@@ -48,6 +49,7 @@ enemyData = api.getData()
 # Enemy
 enemy = Player(int(enemyData[1]), int(enemyData[2]), 0, "img/smalllinks.gif", "Enemy", 32, 8)
 enemy.draw()
+"""
 
 # food
 foodSprite = makeSprite('img/waterlinks.gif', 26)
@@ -103,11 +105,11 @@ while True:
             currentFrame = 2 * 8 + 1
             player.move(currentFrame, 0, 0)
 
-    enemyData = api.getData()
+    #enemyData = api.getData()
 
-    print(enemyData)
-    enemy.getData(int(enemyData[0]), int(enemyData[1]), int(enemyData[2]))
-    api.sendData(currentFrame, player.x, player.y)
+    #print(enemyData)
+    #enemy.getData(int(enemyData[0]), int(enemyData[1]), int(enemyData[2]))
+    #api.sendData(currentFrame, player.x, player.y)
     changeSpriteImage(foodSprite, 0 * 26 + food_frame)
     tick(120)
 
