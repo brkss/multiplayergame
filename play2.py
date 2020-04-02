@@ -1,7 +1,9 @@
 from files.pygame_functions import *
 from files.player import Player
+from files.bullet import Bulet
 from files.api import api
 import time
+import math
 
 screenSize(600, 600)
 setBackgroundImage("img/turf.png")
@@ -36,20 +38,37 @@ def saveData(index, x, y):
     fl.write(str(y) + "\n")
 
 
+def touch(xa, xb, ya, yb):
+    d = math.sqrt((math.pow(xa - xb, 2)) + (math.pow(ya - yb, 2)))
+    if d <= 27:
+        return True
+    return False
+
+def getDir(index):
+    if index < 8:
+        return "right"
+    elif index >= 8 and index < 16:
+        return "down"
+    elif index >= 16 and index < 24:
+        return "left"
+    return "up"
+
+
+
 # player
-player = Player(300, 200, 0, "img/smalllinks.gif", name, 32, 8)
+player = Player(300, 200, 0, "img/smalllinks.gif", name, 32, 8, sta=True)
 player.draw()
+# bullet
+
 
 # connect to api
-"""
 api = api('http://localhost:3000', name)
 api.sendData(17, 300, 200)
 enemyData = api.getData()
-
+print(enemyData)
 # Enemy
-enemy = Player(int(enemyData[1]), int(enemyData[2]), 0, "img/smalllinks.gif", "Enemy", 32, 8)
+enemy = Player(int(enemyData[1]), int(enemyData[1]), 0, "img/smalllinks.gif", "Enemy", 32, 8)
 enemy.draw()
-"""
 
 # food
 foodSprite = makeSprite('img/waterlinks.gif', 26)
@@ -64,6 +83,9 @@ showSprite(boxSprite)
 nextFrame = clock()
 frame = 0
 food_frame = 0
+bullet = Bulet()
+
+enemyBulet = Bulet()
 
 while True:
     if clock() > nextFrame:  # We only animate our character every 80ms.
@@ -71,25 +93,37 @@ while True:
         nextFrame += 80  # so the modulus 8 allows it to loop
         food_frame = (food_frame + 1) % 26
 
+    if keyPressed('space'):
+        bullet.shoot(lastKey, player.x, player.y)
+        api.sendData(currentFrame, player.x, player.y, True, player.x, player.y)
+    elif bullet.bulletOff:
+        bullet.shoot(lastKey, player.x, player.y)
+        if touch(bullet.bx, enemy.x, bullet.by, enemy.y):
+            enemy.hp -= 1
+            print(enemy.hp)
+            enemy.hit()
+            bullet.shoot(lastKey, player.x, player.y, True)
+
     if keyPressed("right"):
         currentFrame = 0 * 8 + frame
-        player.move(currentFrame, 20, 0)
+        player.move(currentFrame, 25, 0)
         lastKey = "right"
 
     elif keyPressed("down"):
         currentFrame = 1 * 8 + frame
-        player.move(currentFrame, 0, 20)
+        player.move(currentFrame, 0, 25)
         lastKey = "down"
 
     elif keyPressed("left"):
         currentFrame = 2 * 8 + frame
-        player.move(currentFrame, -20, 0)
+        player.move(currentFrame, -25, 0)
         lastKey = "left"
 
     elif keyPressed("up"):
         currentFrame = 3 * 8 + frame
-        player.move(currentFrame, 0, -20)
+        player.move(currentFrame, 0, -25)
         lastKey = "up"
+
 
     else:
         if lastKey == "down":
@@ -105,11 +139,22 @@ while True:
             currentFrame = 2 * 8 + 1
             player.move(currentFrame, 0, 0)
 
-    #enemyData = api.getData()
+    enemyData = api.getData()
+    enemyDir = getDir(int(enemyData[0]))
+    if enemyData[3]:
+        enemyBulet.shoot(enemyDir, int(enemyData[1]), int(enemyData[2]))
+    elif enemyBulet.bulletOff:
+        enemyBulet.shoot(enemyDir, int(enemyData[1]), int(enemyData[2]))
+        if touch(enemyBulet.bx, player.x, enemyBulet.by, player.y):
+            player.hp -= 1
+            print(enemy.hp)
+            enemy.hit()
+            enemyBulet.shoot(lastKey, player.x, player.y, True)
 
-    #print(enemyData)
-    #enemy.getData(int(enemyData[0]), int(enemyData[1]), int(enemyData[2]))
-    #api.sendData(currentFrame, player.x, player.y)
+    print(enemyData)
+    enemy.getData(int(enemyData[0]), int(enemyData[1]), int(enemyData[2]))
+    api.sendData(currentFrame, player.x, player.y)
+
     changeSpriteImage(foodSprite, 0 * 26 + food_frame)
     tick(120)
 

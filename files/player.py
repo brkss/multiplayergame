@@ -57,54 +57,14 @@ class Player:
         return False
 
     def hit(self):
+        """
         self.name = makeLabel(" " + str(self.playerName) + " " + str(self.hp)[0], 14, self.x + 32, self.y + 35, background='pink')
         hideLabel(self.name)
         moveLabel(self.name, self.x - 32, self.y - 40)
         showLabel(self.name)
+        """
         self.score = makeLabel(self.lb+" : "+str(self.hp)[0], 16, self.xt, self.yt, background='white')
         moveLabel(self.score, self.xt, self.yt)
         showLabel(self.score)
-
-"""
-    def shoot(self, dirc, x, y):
-        index = 0
-        if not self.bulletOff:
-            self.bx = x
-            self.by = y
-            self.hp -=1
-            if dirc == "up":
-                self.buletIndex = 1
-            elif dirc == "down":
-                self.buletIndex = 2
-            elif dirc == "left":
-                self.buletIndex = 3
-            elif dirc == "right":
-                self.buletIndex = 0
-
-
-
-        if self.buletIndex == 1:
-            self.by += -5
-        elif self.buletIndex == 2:
-            self.by += 5
-        elif self.buletIndex == 3:
-            self.bx += -5
-        elif self.buletIndex == 0:
-            self.bx += 5
-
-        if self.BordCo(self.bx, self.by):
-            self.bulletOff = False
-            hideSprite(self.bulet)
-            self.bx = self.x
-            self.by = self.y
-        else:
-            changeSpriteImage(self.bulet, self.buletIndex)
-            moveSprite(self.bulet, self.bx, self.by, True)
-            showSprite(self.bulet)
-            self.bulletOff = True
-
-"""
-
-
 
 

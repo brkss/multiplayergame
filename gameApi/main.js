@@ -20,6 +20,13 @@ app.get('/g/:name', (req, res) => {
     }
 
 })
+
+app.get("/q/:name", (req, res) => {
+    let index = players.findIndex(x => x.name == req.body.name)
+    players.splice(index, 1)
+    console.log("quited")
+    console.log(players)
+})
 app.post('/b', (req, res) => {
     console.log("post");
     if (!req.body.name) {
@@ -33,12 +40,24 @@ app.post('/b', (req, res) => {
         players[index].index = req.body.index
         players[index].x = req.body.x
         players[index].y = req.body.y
+        if (req.body.shoot == 'True') {
+            players[index].shoot = true
+            players[index].bx = req.body.bx
+            players[index].by = req.body.by
+        } else {
+            players[index].shoot = false
+            players[index].bx = -1
+            players[index].by = -1
+        }
         console.log('alerdy exist.')
     } else if (players.length < 2) {
         const player = {
             index: req.body.index || 1 * 8 + 5,
             x: req.body.x,
             y: req.body.y,
+            shoot: req.body.shoot,
+            bx: req.body.bx,
+            by: req.body.by,
             name: req.body.name
         };
         players.push(player)

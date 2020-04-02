@@ -29,13 +29,13 @@ class Bulet:
                 self.buletIndex = 0
 
         if self.buletIndex == 1:
-            self.by += -5
+            self.by += -25
         elif self.buletIndex == 2:
-            self.by += 5
+            self.by += 25
         elif self.buletIndex == 3:
-            self.bx += -5
+            self.bx += -25
         elif self.buletIndex == 0:
-            self.bx += 5
+            self.bx += 25
 
         if self.BordCo(self.bx, self.by) or touch :
 
