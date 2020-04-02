@@ -11,7 +11,8 @@ class Player:
         self.frame = 0
         self.framePart = eachFrame
         self.hp = 10
-        self.name = makeLabel(" " + str(name) + " "+str(self.hp), 14, self.x + 32, self.y + 35, background='pink')
+        self.playerName = name
+        self.name = makeLabel(" " + str(self.playerName) + " "+str(self.hp), 14, self.x + 32, self.y + 35, background='pink')
         self.bulet = makeSprite('img/buletlinks.gif', 4)
         self.bx = self.x
         self.by = self.y
@@ -56,7 +57,11 @@ class Player:
         return False
 
     def hit(self):
-        self.score = makeLabel(self.lb+" : "+str(self.hp), 16, self.xt, self.yt, background='white')
+        self.name = makeLabel(" " + str(self.playerName) + " " + str(self.hp)[0], 14, self.x + 32, self.y + 35, background='pink')
+        hideLabel(self.name)
+        moveLabel(self.name, self.x - 32, self.y - 40)
+        showLabel(self.name)
+        self.score = makeLabel(self.lb+" : "+str(self.hp)[0], 16, self.xt, self.yt, background='white')
         moveLabel(self.score, self.xt, self.yt)
         showLabel(self.score)
 
